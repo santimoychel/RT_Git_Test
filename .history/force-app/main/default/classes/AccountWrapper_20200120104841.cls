@@ -7,8 +7,6 @@ public with sharing class AccountWrapper {
     thisAccount = startWith;
   }
 
-
-
   public decimal getRoundedAvgPriceOfOpps(){
     AggregateResult[] ar = [SELECT AVG(Amount) 
                             FROM Opportunity 
