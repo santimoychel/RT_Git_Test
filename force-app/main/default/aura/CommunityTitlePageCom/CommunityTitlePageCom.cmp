@@ -1,0 +1,91 @@
+<aura:component controller="CommunityTitlePageApx"
+    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+    access="global">
+    <aura:attribute name="isLike" type="Boolean" default="true" />
+    <aura:attribute name="IsComment" type="Boolean" default="false" />
+    <aura:attribute name="IsShare" type="Boolean" default="false" />
+    <aura:attribute name="IsSelect" type="Boolean" default="true" />
+    <aura:attribute name="userName" type="String" />
+    <aura:attribute name="userViews" type="Integer" />
+    <aura:attribute name="answers" type="Integer" />
+
+    <aura:attribute name="bestAnswerId" type="String" />
+    <aura:attribute name="bestAnswer" type="Object" />
+    <aura:attribute name="isBestAnswerShow" type="Boolean" default="false" />
+    <aura:attribute name="feedItem" type="Object" />
+    <aura:attribute name="feedComment" type="List" />
+    <aura:attribute name="newFeedCommentBody" type="String" />
+    <aura:attribute name="userById" type="Object" />
+    
+    <aura:attribute name="feedItemId" type="String" />
+
+    <aura:attribute name="isShowHeader" type="Boolean" default="false" />
+    
+
+    <!-- <aura:attribute name="newFeedComment" type="FeedComment" default="{'sobjectType': 'FeedComment',
+                                                'ParentId' : '0012v00002TtJY7AAN',
+                                                'FeedItemId':'0D52v00008qdDcPCAU',
+                                                'CommentBody':'',
+                                                }" /> -->
+
+    <aura:attribute name="IsRichText" type="Boolean" default="false" />
+    <aura:attribute name="TopAnswerDetails" type="List" />
+
+    <!--this attribute use for Best Answer -->
+    <aura:attribute name="bestAns" type="Boolean" default="true" />
+
+    <!--this attribute use for hide/Show the div of Top best Ans -->
+    <aura:attribute name="topAnsDiv" type="Boolean" default="true" />
+
+    <aura:handler name="init" value="this" action="{!c.doInit}" />
+
+    <aura:handler name="CommunityTitlePageEvent" event="c:CommunityTitlePageEvent" action="{!c.doInit}"/>
+
+    <div class="slds-p-left_medium" style="background-color: white">
+       <aura:if isTrue="{!v.isShowHeader}" >
+            <c:QuestionCard IsRichText="{!v.IsRichText}" Question="{!v.feedItem}" userById="{!v.userById}"/>
+        </aura:if>
+
+        
+        <aura:if isTrue="{!v.isBestAnswerShow}">
+            <b>Top Related Answer</b>
+            <c:CommunityTitlePageChild feedCommentChild="{!v.bestAnswer}" userById="{!v.userById}" bestAnswerId="{!v.bestAnswerId}" isSelectedAsBest="true"/>
+        </aura:if>
+
+
+
+        <b> All answers </b>
+        <aura:iteration items="{!v.feedComment}" var="obj">
+            <!-- <aura:iteration items="{!v.obj}" var="obj1"> -->
+                <c:CommunityTitlePageChild feedCommentChild="{!obj}" userById="{!v.userById}" bestAnswerId="{!v.bestAnswerId}" feedItemId="{!obj.FeedItemId}"/>
+            <!-- </aura:iteration> -->
+        </aura:iteration>
+        <br />
+
+        <!-- Bottom comment -->
+        <!-- Write Answer or comment -->
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1/2-of-6" style="padding-top: 17px;">
+                <span class="slds-avatar slds-avatar--circle slds-avatar--medium">
+                    <img src="{!$Resource.avtar}" />
+                </span>
+            </div>
+            <div class="slds-col slds-size_5-of-6" style="padding: 0px;width: 91%;">
+                <aura:if isTrue="{!v.IsRichText}">
+                    <lightning:inputRichText  value="{!v.newFeedCommentBody}"
+                        placeholder='Write an answer...' />
+                    <div class="slds-float_right">
+                        <lightning:button  label="Answer" onclick="{!c.Submit}" />
+                    </div>
+                    <br />
+                    <aura:set attribute="else">
+                        <lightning:textarea  value="{!v.newFeedCommentBody}"
+                            placeholder='Write an answer...' onclick="{!c.IsChange}" />
+                    </aura:set>
+                </aura:if>
+            </div>
+        </div>
+        <br />
+    </div>
+    <br /><br />
+</aura:component>

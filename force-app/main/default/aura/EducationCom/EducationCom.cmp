@@ -1,0 +1,18 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="issearching"    type="Boolean" default="false"/>
+    
+    
+    
+    <div style="padding-left:25px;padding-top:10px;background-color:#f5f5f0" >
+        <img src="{!$Resource.Practice_Img}" width="50" height="50"/>
+    </div> 
+   
+        <div class="container" > 
+            <img src ="{!$Resource.Searching_img}" height="600" width="1320" />
+            <div class="text-block">
+                <h4>Nature</h4>
+                <p>What a beautiful sunrise</p>
+            </div>
+        </div>
+   
+</aura:component>

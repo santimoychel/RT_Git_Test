@@ -1,0 +1,91 @@
+<aura:component controller="AddRecordAndDispInSamePage"  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="candidate" type="AddRecordAndDisplaySamePage__c" 
+                    default="{'sobjectType': 'AddRecordAndDisplaySamePage__c',
+                             'Email__c': '',
+                             'Username__c': '',
+                             'FirstName__c': '', 
+                             'LastName__c': '',
+                             'Profile__c': ''                        
+                             }"/>
+    
+    <aura:attribute name="myList" type="List" />
+    <aura:handler name="init" value="{!this}" action="{!c.recordList}" />
+    
+    <!-- Picklist Values of LeadSource Field -->
+    <aura:attribute name="ProfileSourcePicklist" type="String[]" default="--None--"/> 
+    <aura:attribute name="selectedOption" type="String" />
+    <!-- Field Name as String-->
+    <aura:attribute name="profile_picklist" type="String" default="Profile__c" access="global"/> 
+    <!--   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />-->
+    <!-- Auto RefreshView -->
+    <aura:handler event="force:refreshView" action="{!c.isRefreshed}" />
+    
+    
+    <div class="slds-align_absolute-center  " style="height:5rem">
+        <div class="slds-text-heading_large"> Invite Your Team </div>
+    </div>
+    <div class="slds-clearfix " style="padding-left:130px">
+        <div class="slds-float_left slds-box " >
+            <div class="slds-text-heading_medium">New User </div><br/>
+            <lightning:input type="email" name="email1" label="*Email" placeholder="user@company.com" required="True" value="{!v.candidate.Email__c}"/><br/>
+            <lightning:input  type="email" id="text-input-id-1" label="*Username"  value="{!v.candidate.Username__c}" placeholder="user@company.com" required="True" /><br/>
+            <lightning:input  type="text" id="text-input-id-1" label="*First Name" value="{!v.candidate.FirstName__c}" placeholder="Placeholder Text" required="True"  />  <br/>             
+            <lightning:input type="text" id="text-input-id-1" label="*Last Name" value="{!v.candidate.LastName__c}" placeholder="Placeholder Text" required="True" /><br/>
+            
+            
+            <lightning:select label="Profile" aura:id="statusPicklist" Value="{!v.candidate.Profile__c}" onfocus="{!c.fetchLeadSourcePicklist}"  required="true" >  
+               
+                 <aura:iteration items="{!v.ProfileSourcePicklist}" var="val" aura:id="InputAccountIndustry">
+                    <option value="{!val}" style="width:200px;"> {!val}</option>
+                 </aura:iteration>
+            </lightning:select>
+            <br/>
+
+            
+            <div class="slds-form-element" style="padding-left:230px">
+                <lightning:button aura:id="submit" type="submit" label="SaveDetails" onclick="{!c.SaveDetails }" />
+            </div>
+        </div>  
+        
+        <!--   <div class="slds-float_center " style="padding-right:830px;">  
+        
+              <div class="slds-border_right"> <p style="color:white">|</p></div>
+        
+        </div>
+        -->
+     <div class="slds-clearfix "  style="padding-right:160px;">
+        <div class="slds-float_right slds-box" >
+            <div class="slds-text-heading_medium">Users Added </div><br/>
+            <div class="slds slds-scrollable_y" style="height:403px"> 
+                
+                <table class="slds-table slds-table--bordered  slds-theme_shade" style="padding-right:55px" >
+                    <thead class="slds-box slds-theme_shade ">
+                        <tr>
+                            <th scope="col"><span class="slds-truncate">Email</span></th>
+                            <th scope="col"><span class="slds-truncate">Username</span></th>
+                            <th scope="col"><span class="slds-truncate">FirstName</span></th>
+                            <th scope="col"><span class="slds-truncate">LastName</span></th>
+                            <th scope="col"><span class="slds-truncate">Profile</span></th> 
+                        </tr>
+                    </thead>
+                    
+                    <tbody >
+                        <aura:iteration items="{!v.myList}" var="myRec">
+                            <tr>
+                                <td> {!myRec.Email__c}</td>
+                                <td> {!myRec.Username__c}</td>
+                                <td> {!myRec.FirstName__c}</td>
+                                <td> {!myRec.LastName__c}</td>
+                                <td> {!myRec.Profile__c}</td>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                    
+                </table>
+                
+            </div>
+        </div>
+    </div>
+    </div> 
+</aura:component>

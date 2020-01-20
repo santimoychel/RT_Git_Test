@@ -1,0 +1,278 @@
+<aura:component controller="CommunityTitlePageApx">
+    <aura:attribute name="Question" type="Object" />
+    <aura:attribute name="userById" type="Object" />
+    <aura:attribute name="imageUrl" type="String" />
+    <aura:attribute name="isLike" type="Boolean" default="false" />
+    <aura:attribute name="isAnswer" type="Boolean" default="false" />
+    <aura:handler name="init" value="this" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.Question}" action="{!c.doInit}" />
+    <aura:attribute name="IsRichText" type="Boolean" />
+    
+     <aura:attribute name="isCopyLink" type="boolean" default="false"/>
+      <aura:attribute name="isShareGroup" type="boolean" default="false"/>
+      <aura:attribute name="isShareWithFriend" type="boolean" default="false"/>
+    
+    <aura:attribute name="copiedLinkToShare" type="String"/>
+    
+    <aura:registerEvent name="CommunityTitlePageEvent" type="c:CommunityTitlePageEvent" />
+    
+    <div class="slds-border_top slds-border_right slds-border_bottom slds-border_left" style="width: 98%;">
+        <lightning:buttonMenu variant="container" iconName="utility:down" class="slds-float_right" onselect="{!c.editAndDelete}">
+            <lightning:menuItem value="Edit" label="Edit" />
+            <lightning:menuItem value="Delete" label="Delete" />
+        </lightning:buttonMenu>
+        <article class="slds-post">
+            <header class="slds-post__header slds-media">
+                <div class="slds-media__figure">
+                    <a href="javascript:void(0);" class="slds-avatar slds-avatar_circle slds-avatar_large">
+                        <img alt="{!v.Question.CreatedBy.Name}" src="{!v.imageUrl}" title="{!v.Question.CreatedBy.Name}" />
+                    </a>
+                </div>
+                <div class="slds-media__body">
+                    <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                        <p>
+                            <a href="{!'/' + v.Question.CreatedById}"
+                               title="{!v.Question.CreatedBy.Name}">{!v.Question.CreatedBy.Name}</a>
+                        </p>
+                        <!-- <button class="slds-button slds-button_icon slds-button_icon-border slds-button_icon-x-small"
+aria-haspopup="true" title="More Options">
+<lightning:icon iconName="assets:down" size="x-small" alternativeText="More Options" />
+
+</button> -->
+                    </div>
+                    <p class="slds-text-body_small">
+                        <a href="javascript:void(0);" title="Click for single-item view of this post" class="slds-text-link_reset">
+                            <!-- <lightning:relativeDateTime value="{! v.Question.LastModifiedDate }" /> -->
+                            <lightning:formattedDateTime value="{! v.Question.LastModifiedDate }" />
+                            <!-- {! v.Question.LastModifiedDate } -->
+                        </a>
+                        
+                    </p>
+                </div>
+            </header>
+            <div class="slds-post__content slds-text-longform">
+                <p><strong>{!v.Question.Title}</strong></p>
+                <p>
+                    <lightning:formattedRichText value="{!v.Question.Body}" /> 
+                    <!-- {!v.Question.Body} -->
+                </p>
+            </div>
+            <footer class="slds-post__footer">
+                <ul class="slds-post__footer-actions-list slds-list_horizontal">
+                    <li class="slds-col slds-item slds-m-right_medium">
+                        <aura:if isTrue="{!!v.isLike}">
+                            <button title="Like this item" class="slds-button_reset slds-post__footer-action" onclick="{!c.like}"
+                                    aria-pressed="false">
+                                <lightning:icon iconName="assets:like" size="x-small" alternativeText="like" />
+                                Like
+                            </button>
+                            <aura:set attribute="else">
+                                <button title="unlike this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false"
+                                        onclick="{!c.like}">
+                                    Liked .</button>
+                                
+                            </aura:set>
+                        </aura:if>
+                    </li>
+                    <li class="slds-col slds-item slds-m-right_medium">
+                        <!-- <aura:if isTrue="{!v.IsRichText}"> -->
+                        <button title="Comment on this item" class="slds-button_reset slds-post__footer-action" onclick="{!c.sendAnswer}">
+                            <!-- <svg class="slds-icon slds-icon-text-default slds-icon_x-small slds-align-middle"
+aria-hidden="true">
+<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#share_post"></use>
+</svg> -->
+                            <lightning:icon iconName="assets:share_post" size="x-small" alternativeText="Answer" />
+                            Answer</button>
+                        <!-- </aura:if> -->
+                    </li>
+                   
+               <li class="slds-col slds-item slds-m-right_medium">
+                    
+                                       <lightning:buttonMenu alternativeText="More options" label="Share" onselect="{!c.share}" iconSize="small" aura:id="shareBtn">
+                        <lightning:menuItem value="CopyLink" label="Copy Link"  />         
+                        <lightning:menuItem value="ShareWithGroup" label="Share With Group"  />     
+                        <lightning:menuItem value="ShareWithFollowers" label="Share With Followers"  /> 
+                        
+                    </lightning:buttonMenu>
+                    
+                    
+                </li>
+                        
+                        
+                        
+                        <!-- <button title="Share this item" class="slds-button_reset slds-post__footer-action">
+
+<lightning:icon iconName="assets:share" size="x-small" alternativeText="like" />
+Share</button> -->
+                    
+                </ul>
+                <ul class="slds-post__footer-meta-list slds-list_horizontal slds-has-dividers_right slds-text-title">
+                    <!-- <li class="slds-item">20 shares</li> -->
+                    <li class="slds-item">{!v.Question.LikeCount} Likes</li>
+                    <li class="slds-item">{!v.Question.Revision} views</li>
+                </ul>
+            </footer>
+        </article>
+    </div>
+      <!--Model Popup for copyLink-->    
+        
+        <div class="slds-m-around_xx-large">
+            
+            <!--Use aura:if tag to display/hide popup based on isModalOpen value-->  
+            <aura:if isTrue="{!v.isCopyLink}">
+                
+                <!-- Modal/Popup Box starts here-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{! c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Copy Link to Thread   </h2>
+                        </header>
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            
+                            <lightning:input type="text" aura:id="pId" label="This link works only for people with access to this thread." value="{!v.copiedLinkToShare}"/>
+                            <lightning:button iconName="utility:copy_to_clipboard"
+                                              onclick="{!c.copyHardcoreText}"
+                                              label="Copy Text to clipboard"
+                                              aura:id="btn1"/>
+                        </div>
+                        
+                        <!--Modal/Popup Box Footer Starts here-->
+                        
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>
+        
+        
+        <!--Model Popup for Share Group-->    
+        
+        <div class="slds-m-around_xx-large">
+            
+            <!--Use aura:if tag to display/hide popup based on isModalOpen value-->  
+            <aura:if isTrue="{!v.isShareGroup}">
+                
+                <!-- Modal/Popup Box starts here-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open"  style="height:800px">
+                    <div class="slds-modal__container">
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{! c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Share with Group   </h2>
+                        </header>
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            
+                            <lightning:input type="text" aura:id="pId" label="Group Name"  placeholder="Search Groups"/>
+                            
+                            <br/>
+                            <lightning:inputRichText variant="bottom-toolbar"  placeholder="Type something interesting"/>
+                            <p class="slds-float_right">To link to a record, enter / then start typing the record name.</p>
+                            <br/>
+                          
+                            <div class="slds-box">
+                                 <span class="slds-avatar slds-avatar--circle slds-avatar--medium">
+                                    <img src="{!$Resource.avtar}" />
+                                </span>
+                                <a><b>{!v.userInfo.Name}</b></a> asked a question.<br/>
+                                <aura:iteration var="fi" items="{!v.feedItem}" >
+                                    <strong>  {!fi.Title}</strong>
+                                </aura:iteration>  
+                            </div>
+                        </div>
+                        
+                        <!--Modal/Popup Box Footer Starts here-->
+                        <footer class="slds-modal__footer">
+                            
+                            <lightning:button variant="brand"
+                                              label="Share"
+                                              title="Share"
+                                              onclick="{!c.PopupShareHandler}"/>
+                        </footer>
+                        
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>
+        
+          <!--Model Popup for Share With Followers-->    
+        
+        <div class="slds-m-around_xx-large">
+            
+            <!--Use aura:if tag to display/hide popup based on isModalOpen value-->  
+            <aura:if isTrue="{!v.isShareWithFriend}">
+                
+                <!-- Modal/Popup Box starts here-->
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open"  style="height:800px">
+                    <div class="slds-modal__container">
+                        <!-- Modal/Popup Box Header Starts here-->
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{! c.closeModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Share with Followers  </h2>
+                        </header>
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            
+                            <b>To:My Followers</b>
+                            <lightning:inputRichText variant="bottom-toolbar"  placeholder="Type something interesting"/>
+                            <p class="slds-float_right">To link to a record, enter / then start typing the record name.</p>
+                            <br/>
+                          
+                            <div class="slds-box">
+                                 <span class="slds-avatar slds-avatar--circle slds-avatar--medium">
+                                    <img src="{!$Resource.avtar}" />
+                                </span>
+                                <a><b>{!v.userInfo.Name}</b></a> asked a question.
+                                <aura:iteration var="fi" items="{!v.feedItem}" >
+                                         <strong>  {!fi.Title}</strong>
+                                </aura:iteration>  
+                            </div>
+                        </div>
+                        
+                        <!--Modal/Popup Box Footer Starts here-->
+                        <footer class="slds-modal__footer">
+                            
+                            <lightning:button variant="brand"
+                                              label="Share"
+                                              title="Share"
+                                              onclick="{!c.PopupShareHandler}"/>
+                        </footer>
+                        
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>
+    <ul>
+    
+           
+               <li class="slds-col slds-item slds-m-right_medium">
+                    
+ <lightning:buttonMenu alternativeText="Show menu" onselect="{!c.share }">
+        <lightning:menuItem aura:id="menuItems" value="MenuItemOne" label="Menu Item One" checked="true" />
+        <lightning:menuItem aura:id="menuItems" value="MenuItemTwo" label="Menu Item Two" checked="false" />
+        <lightning:menuItem aura:id="menuItems" value="MenuItemThree" label="Menu Item Three" checked="false" />
+    </lightning:buttonMenu>
+                    
+                    
+                </li>
+                        
+    
+    </ul>
+</aura:component>

@@ -1,0 +1,210 @@
+<aura:component  access="global">
+   
+        <aura:attribute name="IsLike" type="Boolean" default="true" /> 
+        <aura:attribute name="IsComment" type="Boolean" default="false" />
+        <aura:attribute name="IsShare" type="Boolean" default="false" />
+        <aura:attribute name="IsSelect" type="Boolean" default="true" />
+        
+        
+        <aura:attribute name="feedCommentChild" type="Object" />
+     <aura:handler name="init" value="this" action="{!c.doInit}"/>
+   
+     <aura:attribute name="TopAnswerDetails" type="List" /> 
+    
+    <!--this attribute use for  Best Answer -->
+    <aura:attribute name="bestAns" type="Boolean" default="true"  />
+      
+    <!--this attribute use for  hide/Show the div of Top best Ans -->
+     <aura:attribute name="topAnsDiv" type="Boolean" default="true"  />
+    
+    
+    
+    
+    
+     <aura:if isTrue="{!v.topAnsDiv}">
+       <div class="slds-feed slds-box"  style="display:none" >
+        
+        <div class="slds-feed__item-comments">
+            <div class="slds-p-horizontal_medium slds-p-vertical_x-small slds-grid">
+                
+                <span class="slds-text-body_small slds-col_bump-left">
+                    <div class="slds-p-horizontal_medium slds-p-vertical_x-small slds-grid">
+                        
+                        <lightning:buttonMenu alternativeText="Action">
+                            <lightning:menuItem label="Edit " value="Edit " />
+                            <lightning:menuItem label="Delete " value="Delete "/>
+                            <lightning:menuItem label="Bookmark " value="Bookmark " />
+                        </lightning:buttonMenu>
+                    </div>
+                    
+                </span>
+            </div>
+            <ul>
+                <li>
+                    <article class="slds-comment slds-media slds-hint-parent">
+                        <div class="slds-media__figure">
+                            <a href="javascript:void(0);" class="slds-avatar slds-avatar_circle slds-avatar_medium">
+                                <img src="{!$Resource.avtar}" />
+                            </a>
+                        </div>
+                        <div class="slds-media__body">
+                            <header class="slds-media slds-media_center">
+                                <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                                    <p class="slds-truncate" title="Jenna Davis">
+                                        <a href="javascript:void(0);">{!v.feedCommentChild.CreatedBy.Name}</a>
+                                    </p>
+                                    
+                                </div>
+                            </header>
+                            <div class="slds-comment__content slds-text-longform">
+                             <aura:iteration items="{!v.TopAnswerDetails}" var="item">
+                                <div class="slds-comment__content slds-text-longform">
+                                    {!item.CommentBody}
+                                </div>
+                            </aura:iteration>
+                            </div>
+                            <div class="slds-var-p-around_x-small">16hr Ago</div>
+                            <footer>
+                                <ul class="slds-list_horizontal slds-has-dividers_right slds-text-body_small">
+                                    
+                                    <li class="slds-item">
+                                        <aura:if isTrue="{!v.IsLike}">
+                                            <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.like}">Like</button>
+                                            <aura:set attribute="else">
+                                                <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.like}">
+                                                    Liked</button>
+                                            </aura:set>
+                                        </aura:if>
+                                    </li>
+                                    
+                                </ul>
+                            </footer>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+            
+        </div>
+    </div>
+         <aura:set attribute="else">
+             <div  class="slds-feed" >
+        <h1><strong>Top Rated Answers</strong></h1>
+    </div>
+              <div class="slds-feed slds-box" >
+        
+        <div class="slds-feed__item-comments">
+            <div class="slds-p-horizontal_medium slds-p-vertical_x-small slds-grid">
+                
+                <span class="slds-text-body_small slds-col_bump-left">
+                    <div class="slds-p-horizontal_medium slds-p-vertical_x-small slds-grid">
+                        
+                        <lightning:buttonMenu alternativeText="Action">
+                            <lightning:menuItem label="Edit " value="Edit " />
+                            <lightning:menuItem label="Delete " value="Delete "/>
+                            <lightning:menuItem label="Bookmark " value="Bookmark " />
+                        </lightning:buttonMenu>
+                    </div>
+                    
+                </span>
+            </div>
+            <ul>
+                <li>
+                    <article class="slds-comment slds-media slds-hint-parent">
+                        <div class="slds-media__figure">
+                            <a href="javascript:void(0);" class="slds-avatar slds-avatar_circle slds-avatar_medium">
+                                <img src="{!$Resource.avtar}" />
+                            </a>
+                        </div>
+                        <div class="slds-media__body">
+                            <header class="slds-media slds-media_center">
+                                <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                                    <p class="slds-truncate" title="Jenna Davis">
+                                        <a href="javascript:void(0);">{!v.feedCommentChild.CreatedBy.Name}</a>
+                                    </p>
+                                    
+                                </div>
+                            </header>
+                            <div class="slds-comment__content slds-text-longform">
+                             <aura:iteration items="{!v.TopAnswerDetails}" var="item">
+                                <div class="slds-comment__content slds-text-longform">
+                                    {!item.CommentBody}
+                                </div>
+                            </aura:iteration>
+                            </div>
+                            <div class="slds-var-p-around_x-small">16hr Ago</div>
+                            <footer>
+                                <ul class="slds-list_horizontal slds-has-dividers_right slds-text-body_small">
+                                    
+                                    <li class="slds-item">
+                                        <aura:if isTrue="{!v.IsLike}">
+                                            <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.like}">Like</button>
+                                            <aura:set attribute="else">
+                                                <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.like}">
+                                                    Liked</button>
+                                            </aura:set>
+                                        </aura:if>
+                                    </li>
+                                    
+                                </ul>
+                            </footer>
+                        </div>
+                    </article>
+                </li>
+            </ul>
+            
+        </div>
+    </div>
+        </aura:set>
+  </aura:if>
+    
+    
+    
+    
+    
+        <div class="slds-border_top slds-border_right slds-border_bottom slds-border_left" style="width: 98%;">
+            <lightning:buttonMenu variant="container" iconName="utility:down" class="slds-float_right">
+                <lightning:menuItem value="Edit" label="Edit" />
+                <lightning:menuItem value="Delete" label="Delete" />
+            </lightning:buttonMenu>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1/2-of-6">
+                    <span class="slds-avatar slds-avatar--circle slds-avatar--medium">
+                        <img src="{!$Resource.avtar}" />
+                    </span>
+                </div> 
+                <div class="slds-col slds-size_5-of-6">
+                    <a><b>{!v.feedCommentChild.CreatedBy.Name}</b></a> <br />
+                      <p>{5 Hours Ago}</p><br />
+                    <lightning:formattedRichText value="{!v.feedCommentChild.CommentBody}"/>
+                    
+                    <footer class="slds-post__footer">
+                        <ul class="slds-post__footer-actions-list slds-list_horizontal">
+                            <li class="slds-col slds-item slds-m-right_medium">
+                                <aura:if isTrue="{!v.bestAns}"> 
+                                    <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.bestAnsBtn}" >
+                                        Select as best .</button>
+                                    <aura:set attribute="else">
+                                        
+                                        <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.bestAnsBtn}" >
+                                            Remove as best .</button>
+                                    </aura:set>
+                                </aura:if> 
+                            </li>
+                            <li class="slds-col slds-item slds-m-right_medium">
+                                <aura:if isTrue="{!v.IsLike}"> 
+                                    <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.like}" >
+                                        Like .</button>
+                                    <aura:set attribute="else">
+                                        <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.like}" >
+                                            Liked .</button>
+                                    </aura:set>
+                                </aura:if>
+                            </li>
+                        </ul>
+                    </footer>
+                    <br />
+                </div>
+            </div>
+        </div>
+        <br />
+    </aura:component>

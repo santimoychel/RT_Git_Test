@@ -1,0 +1,16 @@
+.THIS.slds-p-right_xx-large{
+    padding-top:0px;
+}
+
+.THIS.slds-form-element__control{
+    padding-left:60px;
+     padding-top:10px;
+}
+
+.THIS .hide{
+     pointer-events: none;
+}
+
+.THIS .show{
+     pointer-events: auto;
+}

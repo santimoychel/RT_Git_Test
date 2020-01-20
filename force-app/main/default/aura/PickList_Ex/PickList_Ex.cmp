@@ -1,0 +1,115 @@
+<aura:component controller="PickList_Ex_Class" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="candidate" type="AddRecordAndDisplaySamePage__c" 
+                    default="{'sobjectType': 'AddRecordAndDisplaySamePage__c',
+                             'Email__c': '',
+                             'Username__c': '',
+                             'FirstName__c': '', 
+                             'LastName__c': '',
+                             'Profile__c': ''                        
+                             }"/>
+    
+    
+    
+    <aura:attribute name="myList" type="List" />
+    <aura:handler name="init" value="{!this}" action="{!c.recordList}" />
+    
+    
+    <!--This attribute and handeler for Picklist-->
+    <aura:attribute name="industryMap" type="Map"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
+    
+    <!-- This handeler for RefreshView -->
+    <aura:handler event="force:refreshView" action="{!c.isRefreshed}" />
+    
+    <!--This attribute and handeler for searchning-->
+    <aura:attribute name="filter" type="String" />  
+    <aura:attribute name="UnfilteredData" type="List" /> 
+    
+    <!--This attribute and handeler for Set Page Size-->
+      <aura:attribute name="pageSize" type="Integer" default="3" />       
+      <aura:attribute name="totalSize" type="Integer"/>  
+    
+    <aura:attribute name="SizeList" type="List" />
+    
+    
+    
+    <div class="slds-align_absolute-center" style="height:5rem">
+        <div class="slds-text-heading_large"> Invite Your Team </div>
+    </div>
+    <div class="slds-clearfix " style="padding-left:100px">
+        <div class="slds-float_left slds-box " >
+            <div class="slds-text-heading_medium">New User </div><br/>
+            <lightning:input type="email" name="email1" label="Email" placeholder="user@company.com" required="true" value="{!v.candidate.Email__c}"/><br/>
+            <lightning:input  type="email" id="text-input-id-1" label="Username"  value="{!v.candidate.Username__c}" placeholder="user@company.com" required="true" /><br/>
+            <lightning:input  type="text" id="text-input-id-1" label="First Name" value="{!v.candidate.FirstName__c}" placeholder="Placeholder Text" required="true"  />  <br/>             
+            <lightning:input type="text" id="text-input-id-1" label="Last Name" value="{!v.candidate.LastName__c}" placeholder="Placeholder Text" required="true" /><br/>
+            
+            <div class="form-group">
+                <lightning:select aura:id="industryPicklist" value="{!v.candidate.Profile__c}" onchange="{!c.handleCompanyOnChange}" name="industryPicklist" label="Industry" required="true">
+                    <option value="">--None--</option>
+                    <aura:iteration items="{!v.industryMap}" var="ind" indexVar="key">
+                        <option text="{!ind.value}" value="{!ind.key}" selected="{!ind.key==v.candidate.Profile__c}" />
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+            
+            <br/>
+            
+            
+            <div class="slds-form-element" style="padding-left:230px">
+                <lightning:button aura:id="submit" type="submit" label="SaveDetails" onclick="{!c.SaveDetails }" />
+            </div>
+        </div>  
+        
+        
+        <div class="slds-clearfix "  style="padding-right:130px;">
+            <div class="slds-float_right slds-box" >
+              <div class="slds-text-heading_medium">Users Added </div> <br/>
+            <div class="slds-float_left">
+    
+                <ui:inputSelect aura:id="records" change="{!c.onSelectChange}">
+           
+                <ui:inputSelectOption text="3" value="3"/>
+                <ui:inputSelectOption text="5" value="5"/> 
+                <ui:inputSelectOption text="8" value="8"/>
+       
+                </ui:inputSelect>
+           </div>
+                <lightning:input type="search" label="Search" class="slds-float_right"  value="{!v.filter}" onkeyup="{!c.Search}"></lightning:input><br/><br/><br/>
+                
+                <div class="slds slds-scrollable_y slds-box" style="height:343px"> 
+                    <table class="slds-table slds-table--bordered  slds-theme_shade"  >
+                        <thead class="slds-box slds-theme_shade ">
+                            <tr>
+                                <th scope="col"><span class="slds-truncate">Email</span></th>
+                                <th scope="col"><span class="slds-truncate">Username</span></th>
+                                <th scope="col"><span class="slds-truncate">FirstName</span></th>
+                                <th scope="col"><span class="slds-truncate">LastName</span></th>
+                                <th scope="col"><span class="slds-truncate">Profile</span></th> 
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            <aura:iteration items="{!v.myList}" var="myRec">
+                                <tr>
+                                    <td> {!myRec.Email__c}    </td>
+                                    <td> {!myRec.Username__c} </td>
+                                    <td> {!myRec.FirstName__c}</td>
+                                    <td> {!myRec.LastName__c} </td>
+                                    <td> {!myRec.Profile__c}  </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                        
+                    </table>
+               
+                    <div class="slds-m-left_large" style="padding-left:220px">
+                         <lightning:button label="Previous" title="Neutral action" onclick="{! c.handleClick }" disabled="true"/> 
+                         <lightning:button label="Next" title="Neutral action" onclick="{! c.handleClick }"/>
+                    </div>    
+                    
+                </div>
+            </div>
+        </div>
+    </div> 
+</aura:component>

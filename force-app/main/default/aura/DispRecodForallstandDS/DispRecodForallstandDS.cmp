@@ -1,0 +1,71 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="DispRecordForallStandardObjController" >
+
+<aura:attribute name="opportunityList" type="Object" />
+
+<aura:attribute name="record" type="sObject" /> 
+<aura:attribute name="fldList" type="List" />
+
+<aura:attribute name="sObejctName" type="string"  access="global"/>
+<aura:attribute name="fieldSetName" type="String"  access="global"/> 
+
+<!--Opportunity name print in header portion-->
+<aura:attribute name="HeaderOppName" type="string" description="Opportunity name print in header portion" access="global"/>
+
+<aura:handler name="init" action="{!c.doInit}" value="{!this}" access="global" />
+<!-- {!v.fieldSetName} --> 
+
+<div class="slds-page-header slds-page-header_record-home"  style="background-color:#d9d7d7">
+    <div class="slds-page-header__row"  >
+        <div class="slds-page-header__col-title">
+            <div class="slds-media">
+                <div class="slds-media__figure" >
+                    <span class="slds-icon_container slds-icon-standard-opportunity">
+                        <lightning:icon iconName="action:new_opportunity" /> 
+                    </span>
+
+                </div>
+                <div class="slds-media__body">
+                    <div class="slds-page-header__name">
+                        <div class="slds-page-header__name-title">
+                            <p >{!v.sObejctName}</p>
+
+                            {!v.record.Name}
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div   style="background-color:#f7f7f7">
+    <div class="slds-page-header__row slds-page-header__row_gutters">
+        <div class="slds-page-header__col-details">
+            <!-- Body of lightning card starts here -->
+            <lightning:layout multipleRows="true">         
+                
+                <aura:iteration items="{!v.fldList}" var="fld">
+                    <lightning:layoutItem padding="around-small" size="3"> 
+                        <div>
+                            <ul class="slds-list_horizontal slds-has-dividers_right slds-has-block-links_space">
+                                <lightning:tile> 
+                                    <dl class="slds-dl_horizontal">
+                                        <dt class="slds-dl_horizontal_label" >
+                                                       <div class="slds-text-title slds-truncate">{!fld.fieldLabel} : </div>
+                                                        <div class="slds-truncate" ><c:recordDetail record="{!v.record}" fld="{!fld}" />   </div>
+                                                        
+                                        </dt>                    
+                                    </dl>
+                                </lightning:tile> 
+                            </ul>
+                        </div>
+                    </lightning:layoutItem>           
+                </aura:iteration>
+                
+            </lightning:layout> 
+        </div>
+    </div>
+    
+</div>
+</aura:component>

@@ -1,0 +1,111 @@
+<aura:component  controller="DynamicTableClass" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="sObjectName" type="String"/>
+    <aura:attribute name="fieldSetName" type="String"/>
+    <aura:attribute name="fieldSetValues" type="List"/>
+    <aura:attribute name="tableRecords" type="List"/>
+    <aura:attribute name="parentFieldName" type="String"/>
+    <aura:attribute name="parentRecordId" type="String"/>
+   
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="searchString" type="String"  />
+    <aura:attribute name="UnfilteredData" type="List"  />
+  
+    <aura:attribute name="opportunityList" type="List" />
+    
+    <aura:attribute name="pageSize" type="Integer" default="5" />       
+    <aura:attribute name="totalSize" type="Integer"/>            
+    <aura:attribute name="start" type="Integer" />         
+    <aura:attribute name="end" type="Integer"/>
+    
+    <!-- 
+                       
+     {!v.sObjectName}>>1
+     {!v.fieldSetName}>>2
+     {!v.fieldSetValues}>>3
+     {!v.tableRecords}>>4
+     {!v.parentFieldName}>>5
+     {!v.parentRecordId}>>6
+  
+        {!v.totalSize}>>
+        {!v.start}>>
+        {!v.end}
+  -->
+    <table >
+      
+        <tr >
+            
+            <td style="width:7%">Page Size  {!v.pageSize}
+                <ui:inputSelect aura:id="records" change="{!c.onSelectChange}">
+                
+                <ui:inputSelectOption text="5" value="5"/>
+                <ui:inputSelectOption text="10" value="10"/> 
+                <ui:inputSelectOption text="20" value="20"/>
+                <ui:inputSelectOption text="30" value="30"/>
+                
+                </ui:inputSelect>
+            </td>
+    
+        </tr>
+        
+    </table>
+    <!--Search Record using name-->
+    <div class="slds-clearfix" style="Padding-left:450px">
+        <div class="slds-float_left">
+            
+            <lightning:input type="text" name="input1" label="enter search key" value="{!v.searchString}" onkeyup="{!c.Search}" placeholder="Searching"/>
+            
+        </div>
+    </div>
+  
+ <!-- Display the record-->
+    <div class="slds-scrollable" style="padding-left:20px;padding-right:40px;height:300px;width:6oopx">
+    <div class="slds">
+        <table class="slds-table slds-table--bordered">
+            <thead>
+                <tr>
+                    <aura:iteration items="{!v.fieldSetValues}" var="field">
+                        <th> {!field.label}</th>
+                    </aura:iteration>
+                </tr>
+            </thead>
+            <tbody>
+                    <aura:iteration items="{!v.tableRecords}" var="row" >
+                        <tr>
+                            <aura:iteration items="{!v.fieldSetValues}" var="field">
+                                <td>
+                                    
+                                    <c:LightningDataTableCell record="{!row}" field="{!field}" />
+                                    
+                                </td>
+                            </aura:iteration>
+                        </tr>
+                    </aura:iteration>
+                   
+                    <!--<aura:set attribute="else">
+                        <aura:iteration items="{!v.opportunityList}" var="row" >
+                            <tr>
+                                <aura:iteration items="{!v.fieldSetValues}" var="field">
+                                    <td>
+                                        
+                                        <c:LightningDataTableCell record="{!row}" field="{!field}" />
+                                        
+                                    </td>
+                                </aura:iteration>
+                            </tr>
+                        </aura:iteration>
+                    </aura:set>-->
+            </tbody>
+        </table>
+    </div>
+    <div style="padding-left:445px; padding-top:10px">
+        <lightning:button label="First" disabled="{!v.start == 0}"  onclick="{!c.first}" />
+        
+        <lightning:button label="Previous" disabled="{!v.start == 0}"  onclick="{!c.previous}" />
+        
+        <lightning:button label="Next" disabled="{!v.end > v.totalSize}" onclick="{!c.next}" />
+        
+        <lightning:button label="Last" disabled="{!v.end > v.totalSize}" onclick="{!c.last}" />
+    </div>   
+    </div>
+</aura:component>

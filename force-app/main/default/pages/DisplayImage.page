@@ -1,0 +1,17 @@
+<apex:page showHeader="False">
+    <apex:pageBlock >
+        <apex:pageblocksection >
+            
+            <apex:image url="{!$Resource.Practice_Img}" width="50" height="50"/>
+            
+        </apex:pageblocksection>
+        
+    </apex:pageBlock>
+    <div style="padding-left:50px;padding-right:50px" >
+        <apex:image url="{!$Resource.Searching_img}" height="500" width="1250" />
+        <apex:form >
+            <apex:inputTextArea html-maxlength="10" rows="2" cols="10"/>
+        </apex:form>
+        
+    </div>
+</apex:page>

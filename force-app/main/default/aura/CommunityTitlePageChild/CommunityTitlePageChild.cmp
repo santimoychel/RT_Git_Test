@@ -1,0 +1,73 @@
+<aura:component controller="CommunityTitlePageApx"> 
+        <aura:attribute name="IsLike" type="Boolean" default="true" /> 
+        <aura:attribute name="IsAnswer" type="Boolean" default="false" />
+        <aura:attribute name="IsShare" type="Boolean" default="false" /> 
+        <aura:attribute name="IsSelect" type="Boolean" default="true" />
+
+        <aura:attribute name="isSelectedAsBest" type="Boolean" default="false" />        
+        <aura:attribute name="bestAnswerId" type="String" />
+        <aura:attribute name="userById" type="Object" />
+        <aura:attribute name="imageUrl" type="String" />
+        
+        <aura:attribute name="feedItemId" type="String" />
+
+        <aura:attribute name="TopAnswerDetails" type="List" /> 
+        <aura:handler name="init" value="this" action="{!c.doInit}" />
+
+        <aura:registerEvent name="CommunityTitlePageEvent" type="c:CommunityTitlePageEvent"/>
+
+        <!--this attribute use for Best Answer -->
+        <aura:attribute name="bestAns" type="Boolean" default="true" />
+        
+        <!--this attribute use for hide/Show the div of Top best Ans -->
+        <aura:attribute name="topAnsDiv" type="Boolean" default="true" />
+
+        <aura:attribute name="feedCommentChild" type="Object" />
+    
+        <div class="slds-border_top slds-border_right slds-border_bottom slds-border_left" style="width: 98%;">
+                <lightning:buttonMenu variant="container" iconName="utility:down" class="slds-float_right" onselect="{!c.editAndDelete}">
+                        <lightning:menuItem value="Edit" label="Edit" />
+                       <lightning:menuItem value="Delete" label="Delete" />
+                    </lightning:buttonMenu>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1/2-of-6">
+                        <span class="slds-avatar slds-avatar--circle slds-avatar--medium">
+                            <img src="{!v.imageUrl}" />
+                        </span>
+                    </div>    
+                    <div class="slds-col slds-size_5-of-6">
+                        <p><a>{!v.feedCommentChild.CreatedBy.Name}</a></p> <br />
+                        <p><lightning:formattedRichText value="{!v.feedCommentChild.CommentBody}"/></p>
+                           
+                        <footer class="slds-post__footer">
+                                <ul class="slds-post__footer-actions-list slds-list_horizontal">
+                                    <li class="slds-col slds-item slds-m-right_medium">
+                                        <aura:if isTrue="{!v.isSelectedAsBest}"> 
+                                                <img src="{!$Resource.avtar}" style="max-width: 4%;"/>Select as best
+                                                <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.removeBestAnswer}" >
+                                                    Remove as best .</button>
+                                            <aura:set attribute="else">
+                                                    <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.bestAnsBtn}" >
+                                                            Select as best .</button>
+                                                
+                                            </aura:set>
+                                        </aura:if>    
+                                    </li>
+                                    <li class="slds-col slds-item slds-m-right_medium">
+                                        <aura:if isTrue="{!v.IsLike}"> 
+                                            <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.like}" >
+                                                Like .</button>
+                                            <aura:set attribute="else">
+                                                <button title="Like this item" class="slds-button_reset slds-post__footer-action" aria-pressed="false" onclick="{!c.like}" >
+                                                     Liked .</button>
+                                            </aura:set>
+                                        </aura:if>
+                                    </li>
+                                </ul>
+                        </footer>
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <br />
+</aura:component>

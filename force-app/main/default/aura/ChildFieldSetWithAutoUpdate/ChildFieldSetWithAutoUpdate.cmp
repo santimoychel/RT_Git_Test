@@ -1,0 +1,14 @@
+<aura:component >
+	<lightning:layoutItem flexibility="auto" padding="around-small">
+    <div class="custom-box">
+        <lightning:select value="{!v.Account.Name}">       
+            <option value="">Choose one...</option>
+            <aura:iteration items="{!v.picklistValues}" var="item">
+                <option value="{!item.value}">
+                    {!item}
+                </option>
+            </aura:iteration>
+        </lightning:select>
+    </div>
+</lightning:layoutItem> 
+</aura:component>

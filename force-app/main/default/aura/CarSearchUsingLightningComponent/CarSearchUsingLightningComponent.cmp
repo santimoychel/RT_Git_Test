@@ -1,0 +1,35 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="btnLavel" type="string" default="Search Button"/>
+    <aura:attribute name="btnNew" type="string" default="New Button"/>
+    <aura:attribute name="showNew" type="Boolean" default="false"/>
+    <aura:attribute name="carTypes" type="String[]" />
+   
+    <aura:handler  name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    
+    
+    <lightning:layout >
+        <lightning:layoutItem padding="around-small">
+            <lightning:select name="selectItem" aura:id="carTypeList" label="All Types" variant="label-hidden" onchange="{!c.newValueSelected}" value="" > 
+                <option  text="All Types" />
+                <aura:iteration items="{!v.carTypes}" var="carType">
+                    <option value="{!carType}" text="{!carType}"/>
+                </aura:iteration>
+            </lightning:select>
+        </lightning:layoutItem>        
+        <lightning:layoutItem padding="around-small">
+             <lightning:button label="search" onclick="{!c.onSearhClick}" variant="brand"/>
+           <!--   <lightning:button label="Toggle Button" onclick="{!c.ontoggleClick}" variant="neutral"/> -->
+            <!-- Display new button on availibity -->
+            <aura:if isTrue="{!v.showNew}">
+                <lightning:button label="New" variant="neutral" /> 
+              <!--  <aura:set attribute="else">
+                    New Botton is not Available
+                </aura:set> -->
+            </aura:if>       
+        </lightning:layoutItem>
+        
+    </lightning:layout>
+
+</aura:component>

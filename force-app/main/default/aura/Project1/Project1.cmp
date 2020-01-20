@@ -1,0 +1,126 @@
+<aura:component  controller="Project1" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="options" type="List" default="[{'label': 'Account', 'value': 'account'},{'label': 'Case', 'value': 'case'},{'label': 'Contact', 'value':'contact'},]"/>
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <aura:attribute name="RelatedTo" type="String" />
+    <aura:attribute name="manageBtn" type="Boolean" default="true" />
+    
+     <!--string attribute to hold sobject name-->  
+    <aura:attribute name="sObjectName" type="String" default="Account"/> 
+    <aura:attribute name="fieldSetName" type="String"  access="global"/> 
+    <!--list attribute to return sobject records from controller-->  
+    <aura:attribute name="lstRcds" type="List" />  
+    <!--handler to fetch sobject records using doInit method-->  
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />  
+    
+     <aura:attribute name="searchString" type="String"  />
+    <aura:attribute name="AccData" type="List" /> 
+    <!--Search-->
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-6">   
+            <div class="slds-form-element">
+            
+                <div class="slds-form-element__control" style="padding-top:20px;margin-left:20px;">
+                    <div class="slds-combobox_container">
+                               <label class="slds-form-element__label">Select the Object From ObjectList</label>
+                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open"  aura:id="ddId" aria-expanded="false" aria-haspopup="listbox" role="combobox" onclick="{!c.toggleVisibility}" >
+                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none" >
+                                <input aura:id="setInput" type="text" class="slds-input slds-combobox__input" id="combobox-id-12" aria-autocomplete="list" aria-controls="listbox-id-9" value="{!v.RelatedTo}" onkeyup="{!c.serverCall}" autoComplete="off" role="textbox" placeholder="Search..." onblur="{!c.blurtoggleVisibility}"/>
+                            </div>
+                            <div id="listbox-id-9" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
+                                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                    <aura:iteration items="{!v.options}" var="item" indexVar="i">
+                                        <li role="presentation" class="slds-listbox__item" onclick="{!c.itemSelected}" data-selectedIndex="{#i}">                            
+                                            <span id="{#'listbox-option-unique-id-'+i+1}" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                                <span class="slds-media__body singleRow">
+                                                    <span class="optionTitle slds-listbox__option-text slds-listbox__option-text_entity">{#item.label}</span>
+                                                </span>
+                                            </span>
+                                        </li>
+                                    </aura:iteration>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Insert Record Details-->
+    <div class="slds-p-right_xx-large" >
+        <div class="slds-float_right">
+            <div>
+                <ui:button label="New Record" disabled="{!v.manageBtn}" press="{!c.openmodal}"  />
+            </div>
+            <div role="dialog" tabindex="-1" aria-labelledby="header43" aura:id="Modalbox" class="slds-modal">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        
+                        <h2 id="header43" class="slds-text-heading--medium">{!v.RelatedTo} Details</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around--medium">
+                        <div >
+                            <div class="slds-form-element__control">
+                                <label>Account Name</label>
+                                <input type="text" id="text-input-id-1" placeholder="Account Name" required="" class="slds-input" />
+                            </div>
+                            <div class="slds-form-element__control">
+                                <label>Phone</label>
+                                <input type="text" id="text-input-id-1" placeholder="Placeholder Text" required="" class="slds-input" />
+                            </div><br/>
+                            <div class="slds-form-element__control">
+                                <label>Fax</label>
+                                <input type="text" id="text-input-id-1" placeholder="Placeholder Text" required="" class="slds-input" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <ui:button label="Cancel" press="{!c.closeModal}"  />
+                        <ui:button label="Save" press="{!c.saveBtn}"  />
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+    <!--Search Record using name-->
+    <div class="slds-clearfix" style="Padding-left:450px">
+      <div class="slds-float_left">
+      
+       <lightning:input type="text" name="input1" label="enter search key" value="{!v.searchString}" onkeyup="{!c.Search}"/>
+                   
+          </div>
+    </div>
+   
+    
+    <div class="card-list-heading" align="left" style="Padding-left:20px">  
+        <b>Object Name : {!v.sObjectName} </b>  
+    </div>  <br/>
+    <div style="">
+        <table class="slds-table slds-table--bordered slds-table--striped slds-table--cell-buffer slds-table--fixed-layout">
+            <thead>
+                <tr class="slds-text-heading--label">
+                    <th scope="col"><div class="slds-truncate" title="Name">Name</div></th>
+                    <th scope="col"><div class="slds-truncate" title="AccountNumber">AccountNumber</div></th>
+                    <th scope="col"><div class="slds-truncate" title="OwnerId">OwnerId</div></th>
+                    <th scope="col"><div class="slds-truncate" title="AnnualRevenue">AnnualRevenue</div></th>
+                    <th scope="col"><div class="slds-truncate" title="BillingAddress">BillingAddress</div></th>
+                    <th scope="col"><div class="slds-truncate" title="Industry">Industry</div></th>
+                    <th scope="col"><div class="slds-truncate" title="Phone">Phone</div></th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.lstRcds}" var ="x">
+                    <tr>
+                        <th scope="row"><div class="slds-truncate" title="{!x.Name}">{!x.Name}</div></th>
+                        <td><div class="slds-truncate" title="{!x.AccountNumber}">{!x.AccountNumber}</div></td>
+                        <td><div class="slds-truncate" title="{!x.OwnerId}">{!x.OwnerId}</div></td>
+                        <td><div class="slds-truncate" title="{!x.AnnualRevenue}">{!x.AnnualRevenue}</div></td>
+                        <td><div class="slds-truncate" title="{!x.BillingAddress}">{!x.BillingAddress}</div></td>
+                        <td><div class="slds-truncate" title="{!x.Industry}">{!x.Industry}</div></td>
+                        <td><div class="slds-truncate" title="{!x.Phone}">{!x.Phone}</div></td>                 
+                    </tr>
+                </aura:iteration>                            
+            </tbody>
+        </table>
+    </div>
+    
+</aura:component>

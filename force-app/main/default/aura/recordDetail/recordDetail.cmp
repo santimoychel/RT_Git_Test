@@ -1,0 +1,7 @@
+<aura:component >
+	 <aura:handler name="init" action="{!c.doInit}" value="{!this}" access="global" />
+	<aura:attribute name="record" type="sObject" /> 
+    <aura:attribute name="fld" type="Object" />
+    <aura:attribute name="value" type="String" />
+	{!v.value}
+</aura:component>

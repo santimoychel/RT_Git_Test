@@ -1,0 +1,12 @@
+.THIS.container{
+    position: relative;
+    font-family: Arial;
+    padding-left:20px;
+}
+.THIS.text-block{
+    position: absolute;
+   
+    background-color: black;
+    color: white;
+   
+}

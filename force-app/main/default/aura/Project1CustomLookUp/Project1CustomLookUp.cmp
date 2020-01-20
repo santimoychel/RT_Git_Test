@@ -1,0 +1,9 @@
+<aura:component >
+	<div>
+      <c:Project1></c:Project1>
+      
+    </div>
+    <div>
+    <c:Project1ListCom></c:Project1ListCom>
+    </div>
+</aura:component>

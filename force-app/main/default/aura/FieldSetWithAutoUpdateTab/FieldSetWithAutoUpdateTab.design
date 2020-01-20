@@ -1,0 +1,5 @@
+<design:component>
+	 <design:attribute name="sObejctName" label="SobjectName" default="Opportunity"/>
+        <design:attribute name="fieldSetName" label="fieldSetName" default="OppFieldSet1" />  
+        <design:attribute name="HeaderOppName" label="HeaderOppName"/>
+</design:component>

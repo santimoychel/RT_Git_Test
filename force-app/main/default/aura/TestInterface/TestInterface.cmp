@@ -1,0 +1,8 @@
+<aura:component implements="lightning:availableForFlowScreens" access="global">
+    <!-- When the component renders, call the init handler. -->
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <!-- Attribute to store the validation logic in. -->
+    <aura:attribute name="validate" type="Aura.Action" description="Custom validation function to run when the flow is navigated to the next screen. The function must evaluate the component and return values for isValid and errorMessage."/>
+    <aura:attribute name="textAttribute" type="String"/>
+    <lightning:input id="nameinput" type="text" label="What is your name?" value="{!v.textAttribute}"/>
+</aura:component>

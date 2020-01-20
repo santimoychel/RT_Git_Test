@@ -1,0 +1,38 @@
+<aura:component controller="DisplayContactListEveryAccountClass" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <!--This attribute and handler use for display the account list -->
+    <aura:attribute name="accName" type="String[]"/>
+    <aura:attribute name="contactDetails" type="List"/>
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+     <aura:iteration items="{!v.accName}" var="Info">
+    {!Info.Id.Name}
+    </aura:iteration>
+    
+    <table class="slds-table slds-table--bordered slds-table--striped">
+        <thead>
+            <tr>
+                <th scope="col"><span class="slds-truncate">Account Name</span></th>
+                <th scope="col"><span class="slds-truncate">Contact</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.accName}" var="Info">
+                <tr>
+                    <td>{!Info.Id.Name}</td>
+                    <aura:iteration items="{!v.contactDetails}" var="con">   
+                     
+                            <tr>
+                                <th scope="col"><span class="slds-truncate"> Name :</span></th>
+                                <td>{!con.Name}</td>
+                                <th scope="col"><span class="slds-truncate"> Email:</span></th>
+                                <td>{!con.Email}</td>
+                                <th scope="col"><span class="slds-truncate"> Phone :</span></th>     
+                                <td>{!con.Phone}</td>
+                            </tr> 
+                       
+                    </aura:iteration>
+                </tr> 
+            </aura:iteration>   
+        </tbody>  
+    </table>  
+</aura:component>

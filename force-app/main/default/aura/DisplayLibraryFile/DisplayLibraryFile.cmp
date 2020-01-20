@@ -1,0 +1,211 @@
+<aura:component controller="SSControllerOfDisplayLibraryFile" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" 
+                access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="FileDetails" type="List"/>
+    <aura:attribute name="FileDetails1" type="List"/>
+    <aura:attribute name="initiallydisplay" type="Boolean" default="true"/>
+    
+    <!-- This Attribute for Displaying Folder  -->
+    <aura:attribute name="folderName" type="List" />
+    <aura:attribute name="disFolder" type="Boolean" default="false"/>
+    
+    <!-- This Attribute for file upload  -->
+    <aura:attribute name="accept" type="List" default="['.jpg', '.jpeg']"/>
+    <aura:attribute name="multiple" type="Boolean" default="true"/>
+    <aura:attribute name="disabled" type="Boolean" default="false"/>
+    
+    <aura:attribute name="libraryId" type="String" />
+    <aura:attribute name="libraryName" type="String" />
+    <aura:attribute name="libraryId1" type="String" />
+    
+    <!-- This Attribute for Tile to column   -->
+    <aura:attribute name="changeTileandTable" type="Boolean" default="true"/>
+    <aura:attribute name="showAddBtn" type="Boolean" default="false"/>
+    
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+    
+    
+    <aura:attribute name="items" type="Object"/>
+    
+    <aura:attribute name="labelName" type="String"/>
+    
+    
+    <aura:attribute name="listOfimgId" type="List" />
+    
+    <!--- This Attribute for Display Lib name   -->
+    
+    
+    
+    <!--   -->
+    <div class="slds-box" style=" background-color: white;width:100%;height:100%">
+        <div class="">
+            <div  style=" background-color: white;display: inline-block;">
+                <p>Library Files</p>
+                <p>4 Files</p>
+            </div>
+            
+            <div class="slds-form-element" style="display: inline-block;padding-left:20px;" >
+                
+                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left" style="display:inline-block;padding-left:20px;">
+                    <input type="text" id="text-input-id-1" placeholder="Search By Name" class="slds-input" />
+                </div>
+                
+            </div>
+            
+            <div class="" style="display: inline-block;padding-left:8px;">
+                <lightning:button label="Search" title="Search" onclick="{!c.searhBTN }"/>
+            </div>
+            <aura:if isTrue="{!v.showAddBtn}">
+                <div class="" style="display: inline-block;padding-left:20px;">
+                    <lightning:button label="AddFolder" title="AddFolder" onclick="{!c.handleClick }"/>
+                </div>
+            </aura:if>
+            <div class="slds-form-element" style="display: inline-block;padding-left:20px;">
+                
+                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+                    <lightning:fileUpload  name="fileUploader"
+                                          label= ""
+                                          multiple="{!v.multiple}"
+                                          accept="{!v.accept}"
+                                          disabled="{!v.disabled}"
+                                          recordId="{!v.libraryId1}"
+                                          onuploadfinished="{!c.handleUploadFinished }"/>
+                </div>
+            </div>
+            <div class="slds-form-element slds-button-group-item" style="display: inline-block;padding-left:20px;background-color:white">
+                
+                
+                <lightning:buttonMenu  iconName="utility:table" aura:id="menu" onselect="{!c.handleTileMode }" alternativeText="Show menu">
+                    <lightning:menuItem value="Table" label="Table" />
+                    <lightning:menuItem value="Tile" label="Tile" />                
+                </lightning:buttonMenu>
+            </div>   
+        </div>
+        <!-- Modal/Popup Box starts here-->
+        <aura:if isTrue="{!v.isModalOpen}">
+            
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box Header Starts here-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{!c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Enter Folder Name</h2>
+                    </header>
+                    <!--Modal/Popup Box Body Starts here-->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <p>
+                            <lightning:input name="createFolderName" aura:id="createFolderName" placeholder="Enter folder name" />
+                        </p>
+                    </div>
+                    <!--Modal/Popup Box Footer Starts here-->
+                    <footer class="slds-modal__footer">
+                        
+                        <lightning:button variant="brand"
+                                          label="Submit"
+                                          title="OK"
+                                          onclick="{!c.handlerOfsubmitDetails}"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+        <!--  Path of selecting folder -->
+        
+        <div class="slds-border_bottom" style="padding-top:20px ;width=100%">
+            <P>All Files > {!v.labelName}</P>
+        </div>
+        
+        <div class="slds-grid slds-gutters">  
+            
+            <!-- Display Folder in tree format  -->  
+            <div class="slds-col" style="display:inline-block;width:40%;">
+                <!--Lightning Tree-->
+                <div class="slds-m-around_xx-large ">
+                    <lightning:tree items="{!v.items}" onselect="{!c.handleSelect}" header="All Files"/>
+                </div>
+                <!--Lightning Spinner
+                <div>
+                    <lightning:spinner alternativeText="Processing.." title="Processing.." aura:id="spnr" variant="brand" size="large" />
+                </div>-->
+            </div>
+            
+            <!--displaying folder -->
+            <div class="slds-border_left" style="display:inline-block;width:60%;">
+                <aura:if isTrue="{!v.disFolder}">
+                    <div class="slds-form-element slds-p-around_large">
+                        <lightning:layout multipleRows="true">
+                            <aura:iteration items="{!v.folderName}" var="item1">
+                                
+                                <lightning:layoutItem  size="12" mediumDeviceSize="6">
+                                    <div class="slds-p-around_large " >
+                                        <lightning:icon iconName="standard:folder" alternativeText="folder"  size="large" /><br/>
+                                        <p>{!item1}</p>
+                                    </div>
+                                </lightning:layoutItem>   
+                            </aura:iteration>
+                        </lightning:layout>
+                    </div>   
+                    
+                    <aura:set attribute="else">
+                        
+                        <!-- Display Record -->  
+                        
+                        
+                        
+                        <div class="slds-clearfix  " >
+                            <div class="slds-border_left" style="padding-top:30px;padding-left:30px;">
+                                
+                                <!--This if condition use for initially displaying folder name -->
+                                <lightning:layout multipleRows="true">
+                                    <aura:iteration  items="{!v.FileDetails}" var="lib">
+                                        <lightning:layoutItem  size="12" mediumDeviceSize="6">
+                                            
+                                            <a onclick="{!c.openFolder}">   
+                                                <lightning:icon iconName="standard:folder" alternativeText="folder"  size="large" /><br/>
+                                                <p> {!lib.Name}</p>
+                                            </a> 
+                                            
+                                        </lightning:layoutItem>
+                                    </aura:iteration>
+                                </lightning:layout> 
+                            </div>
+                        </div>
+                    </aura:set>
+                </aura:if>
+                  <table class="slds-table slds-table_cell-buffer ">
+                                                <thead>
+                                                    <tr class="slds-line-height_reset slds-box">
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate" title="File Type">File Type</div>
+                                                        </th>
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate" title="Owner Id">Owner Id</div>
+                                                        </th>
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate" title="Title">Title</div>
+                                                        </th>
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate" title="File Extension">File Extension</div>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody> 
+                                                    <aura:iteration items="{!v.FileDetails1}" var="item">
+                                                        <tr class="slds-hint-parent slds-border_bottom slds-box">
+                                                            <td>{!item.FileType }</td>
+                                                            <td >    <a href="">{!item.Owner.Name}</a></td>
+                                                            <td >   <a href="">{!item.Title }</a>     </td>
+                                                            <td >{!item.FileExtension }</td>
+                                                        </tr>
+                                                    </aura:iteration>
+                                                </tbody>
+                                            </table>
+            </div>
+        </div>
+    </div>
+</aura:component>

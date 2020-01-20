@@ -1,0 +1,154 @@
+<aura:component controller="DisplayAllObjectInPickListClass" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <!-- This attribute for store the picklist value -->
+    <aura:attribute  name="pickl" type="List"/>
+    
+    <!-- This attribute for store the Display the RecordList  -->
+    <aura:attribute  name="DispRecordList" type="List"/>
+    
+    <!-- This handler use for communicate with Apex class  -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!-- This attribute use for sorting  -->
+    <aura:attribute type="String"  name="sortField" />
+    <aura:attribute type="Boolean" name="sortAsc"   />
+    
+      <!-- This attribute use for Hiding the Label  -->
+      <aura:attribute name="hideLabel"     type="Boolean"  default="false"/>
+    
+    <!-- This attributes use for Pagination  -->
+      <aura:attribute name="SizeList"      type="List"                 />
+      <aura:attribute name="pageSize"      type="Integer" default="10" />
+      <aura:attribute name="TotalPageSize" type="Integer"              />
+      <aura:attribute name="start"         type="Integer"              />
+      <aura:attribute name="end"           type="Integer"              />
+      <aura:attribute name="TotalPages"    type="Integer"              />
+      <aura:attribute name="PageNumber"    type="Integer" default="1"  />
+    <!-- This is combobox  -->
+    <div class = "slds-size--3-of-8">
+        <lightning:select aura:id="select" label="Select Object" name="obj"  onchange="{!c.ValueofComboBox}" >
+            <option value="" text="- None -" />
+            <aura:iteration items="{!v.pickl}" var="per">
+                <option value="{!per}" text="{!per}" />                 
+            </aura:iteration>
+        </lightning:select>
+        
+    </div><br/>
+    
+    <!-- This is Displaying Table Label Name  -->
+ 
+         <aura:if isTrue="{!v.hideLabel}">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+         
+             <thead>
+                <tr class="slds-text-heading--label" >
+                    <th scope="col">
+                        <div onclick="{!c.sortByLabel}"
+                             class="slds-truncate"
+                             title="Account Name" >
+                            Label
+                            <aura:if isTrue="{!v.sortField=='sLabel'}">
+                                <span>
+                                    <aura:if isTrue="{!v.sortAsc}">
+                                        &#8593;
+                                        <aura:set attribute="else">
+                                            &#8595;
+                                        </aura:set>
+                                    </aura:if>
+                                </span>
+                            </aura:if>
+                        </div>  
+                    </th>
+                    
+                    <th scope="col">
+                        <div onclick="{!c.sortByAPI}"
+                             class="slds-truncate"
+                             title="Account Name">
+                            API Name
+                            <aura:if isTrue="{!v.sortField=='sLabelApi'}">
+                                <span>
+                                    <aura:if isTrue="{!v.sortAsc}">
+                                        &#8593;
+                                        <aura:set attribute="else">
+                                            &#8595;
+                                        </aura:set>
+                                    </aura:if>
+                                </span>
+                            </aura:if>
+                        </div>      
+                    </th>
+                    <th scope="col">
+                        <div onclick="{!c.sortByType}"
+                             class="slds-truncate"
+                             title="Account Name">
+                            Type
+                            <aura:if isTrue="{!v.sortField=='sLabelType'}">
+                                <span>
+                                    <aura:if isTrue="{!v.sortAsc}">
+                                        &#8593;
+                                        <aura:set attribute="else">
+                                            &#8595;
+                                        </aura:set>
+                                    </aura:if>
+                                </span>
+                            </aura:if>
+                        </div>                  
+                    </th>
+                    <th scope="col">
+                        <div onclick="{!c.sortByRequired}"
+                             class="slds-truncate"
+                             title="Account Name">
+                            Required
+                            <aura:if isTrue="{!v.sortField=='required'}">
+                                <span>
+                                    <aura:if isTrue="{!v.sortAsc}">
+                                        &#8593;
+                                        <aura:set attribute="else">
+                                            &#8595;
+                                        </aura:set>
+                                    </aura:if>
+                                </span>
+                            </aura:if>
+                        </div>
+                        
+                    </th>
+                </tr>
+            </thead>
+           
+            <!-- This is Displaying Record in Table  -->
+            <tbody>
+                
+                <aura:iteration items="{!v.DispRecordList}" var="item">
+                    <tr>
+                        
+                        <th data-label="Label">
+                            <div class="slds-truncate" title="">{!item.sLabel}</div>
+                        </th>
+                        <th data-label="API Name">
+                            <div class="slds-truncate" title=""> {!item.sLabelApi}</div>
+                        </th>
+                        <th data-label="Type">
+                            <div class="slds-truncate" title="">{!item.sLabelType}</div>
+                        </th>
+                        <th data-label="Required">
+                            <div class="slds-truncate" title="">{!item.required}</div>
+                        </th>
+                    </tr>
+                </aura:iteration>
+                
+            </tbody>
+            
+        </table>
+             <div style="padding-left:400px">
+                 <h1>No of page {!v.PageNumber}/{!v.TotalPages}</h1>
+                 <lightning:button label="First" disabled="{!v.start == 0}"  onclick="{!c.first}" />
+                 <lightning:button label="Previous" iconName="action:back" disabled="{!v.start == 0}"  onclick="{!c.previous}" />
+                 <lightning:button  iconName="action:forward" label="Next" disabled="{!v.end >= v.TotalPageSize}" onclick="{!c.next}" />
+                 <lightning:button label="Last" disabled="{!v.end >= v.TotalPageSize}" onclick="{!c.last}" />
+            </div>
+     </aura:if>    
+    
+      
+    
+   
+    
+</aura:component>

@@ -1,0 +1,5 @@
+<design:component>
+	     <design:attribute name="sObjectName" label="SobjectName" default="Account"/>
+         <design:attribute name="fieldSetName" label="fieldSetName" default="OppFieldSet1" />  
+    <!-- name, Owner.Name-->
+</design:component>
